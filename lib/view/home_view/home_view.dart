@@ -1,5 +1,6 @@
 import 'package:denomination/utils/format_indian_number_system.dart';
 import 'package:denomination/utils/image_resource.dart';
+import 'package:denomination/view/home_view/component/save_pop_wridget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -167,7 +168,12 @@ class _HomeViewState extends State<HomeView> {
                   label: "Clear",
                   child: const Icon(Icons.restart_alt_rounded)),
               SpeedDialChild(
-                  onTap: () {},
+                  onTap: () {
+                    showDialog(
+                        context: context,
+                        
+                        builder: (context) => const SavePopWridget());
+                  },
                   label: "Save",
                   child: const Icon(Icons.save_alt_rounded)),
             ],

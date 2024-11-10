@@ -1,4 +1,4 @@
-package com.ptpl.denomination.denomination
+package com.ptpl.denomination
 
 import io.flutter.embedding.android.FlutterActivity
 
