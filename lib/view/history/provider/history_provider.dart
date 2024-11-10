@@ -21,4 +21,14 @@ class HistoryProvider extends ChangeNotifier {
       log(e.toString());
     }
   }
+
+  void deleteAtItem(int index) {
+    try {
+      _calculationItemRepository.deleteAtItem(index);
+      _calculationItems = _calculationItemRepository.getItems();
+      notifyListeners();
+    } catch (e) {
+      log(e.toString());
+    }
+  }
 }

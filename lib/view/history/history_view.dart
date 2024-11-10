@@ -40,6 +40,7 @@ class _HistoryViewState extends State<HistoryView> {
                       SlidableAction(
                         onPressed: (value) {
                           //Implement Delete Feature
+                          provider.deleteAtItem(index);
                         },
                         backgroundColor: const Color(0xFFFE4A49),
                         foregroundColor: Colors.white,
