@@ -65,6 +65,7 @@ class _HomeViewState extends State<HomeView> {
     }
     totalAmount = 0;
     isEdit = false;
+    FocusManager.instance.primaryFocus!.unfocus();
     setState(() {});
   }
 
@@ -131,7 +132,7 @@ class _HomeViewState extends State<HomeView> {
                           keyboardType: TextInputType.number,
                           inputFormatters: [
                             FilteringTextInputFormatter.digitsOnly,
-                            LengthLimitingTextInputFormatter(10)
+                            LengthLimitingTextInputFormatter(8)
                           ],
                           decoration: InputDecoration(
                               isDense: true,
@@ -184,12 +185,18 @@ class _HomeViewState extends State<HomeView> {
                       ),
                     ],
                   ),
-                  FittedBox(
-                    child: Text(
-                      ' ₹ ${FormatIndianNumberSystem.formatIndianNumber(denomination * (int.tryParse(controllers[denomination]!.text) ?? 0))}',
-                      textAlign: TextAlign.start,
-                      style: const TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.w500),
+                  Expanded(
+                    child: SizedBox(
+                      height: 20,
+                      child: FittedBox(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          ' ₹ ${FormatIndianNumberSystem.formatIndianNumber(denomination * (int.tryParse(controllers[denomination]!.text) ?? 0))}',
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.start,
+                          style: const TextStyle(fontWeight: FontWeight.w500),
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -224,6 +231,7 @@ class _HomeViewState extends State<HomeView> {
                               index: widget.index,
                               calculationItem: makeModel(),
                             ));
+                    FocusManager.instance.primaryFocus!.unfocus();
                   },
                   label: "Save",
                   child: const Icon(Icons.save_alt_rounded)),
@@ -236,7 +244,7 @@ class _HomeViewState extends State<HomeView> {
   Widget sliverAppBar() {
     return SliverAppBar(
       expandedHeight: 160.0,
-      toolbarHeight: 80,
+      toolbarHeight: 70,
       floating: false,
       pinned: true,
       actions: [
@@ -326,4 +334,4 @@ class _HomeViewState extends State<HomeView> {
   }
 }
 
-// SystemChannels.textInput.invokeMethod('TextInput.hide');
+// 

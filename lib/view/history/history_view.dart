@@ -148,6 +148,7 @@ ${converter.convertAmountToWords(double.parse(calculationItem.totalAmount!), ign
                 Expanded(
                     child: Text(
                   "₹ ${FormatIndianNumberSystem.formatIndianNumber(double.parse(calculationItem.totalAmount ?? "0").toInt())}",
+                  
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,
                   style: TextStyle(

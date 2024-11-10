@@ -1,6 +1,7 @@
 import 'package:denomination/data/model/calculation_item.dart';
 import 'package:denomination/view/home/provider/home_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class SavePopWridget extends StatefulWidget {
@@ -133,6 +134,7 @@ class _SavePopWridgetState extends State<SavePopWridget> {
               maxLines: 4,
               controller: remarkController,
               textInputAction: TextInputAction.done,
+              inputFormatters: [LengthLimitingTextInputFormatter(300)],
               keyboardType: TextInputType.multiline,
               decoration: InputDecoration(
                   hintStyle: TextStyle(
@@ -199,6 +201,8 @@ class _SavePopWridgetState extends State<SavePopWridget> {
                                     onPressed: () {
                                       widget.isEdit ? updateItem() : addItem();
                                       widget.action();
+                                    
+
                                       Navigator.pop(context);
                                       Navigator.pop(context);
                                     },
