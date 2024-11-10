@@ -1,7 +1,7 @@
 import 'package:denomination/utils/format_indian_number_system.dart';
 import 'package:denomination/utils/image_resource.dart';
-import 'package:denomination/view/history_view/history_view.dart';
-import 'package:denomination/view/home_view/component/save_pop_wridget.dart';
+import 'package:denomination/view/history/history_view.dart';
+import 'package:denomination/view/home/component/save_pop_wridget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';

@@ -1,57 +1,53 @@
-class CalculationItem {
+import 'package:hive/hive.dart';
+
+part 'calculation_item.g.dart';
+
+@HiveType(typeId: 0)
+class CalculationItem extends HiveObject {
+  @HiveField(0)
   String? type;
+
+  @HiveField(1)
   String? date;
-  String? reamrk;
+
+  @HiveField(2)
+  String? remark;
+
+  @HiveField(3)
   String? totalAmount;
+
+  @HiveField(4)
   List<Calculation>? calculation;
 
-  CalculationItem(
-      {this.type, this.date, this.reamrk, this.totalAmount, this.calculation});
+  CalculationItem({
+    this.type,
+    this.date,
+    this.remark,
+    this.totalAmount,
+    this.calculation,
+  });
 
-  CalculationItem.fromJson(Map<String, dynamic> json) {
-    type = json['type'];
-    date = json['date'];
-    reamrk = json['reamrk'];
-    totalAmount = json['totalAmount'];
-    if (json['calculation'] != null) {
-      calculation = <Calculation>[];
-      json['calculation'].forEach((v) {
-        calculation!.add( Calculation.fromJson(v));
-      });
-    }
-  }
+  
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['type'] = type;
-    data['date'] = date;
-    data['reamrk'] = reamrk;
-    data['totalAmount'] = totalAmount;
-    if (calculation != null) {
-      data['calculation'] = calculation!.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
+ 
 }
 
-class Calculation {
+@HiveType(typeId: 1)
+class Calculation extends HiveObject {
+  @HiveField(0)
   String? multiplier;
+
+  @HiveField(1)
   String? multiplicand;
+
+  @HiveField(2)
   String? product;
 
-  Calculation({this.multiplier, this.multiplicand, this.product});
+  Calculation({
+    this.multiplier,
+    this.multiplicand,
+    this.product,
+  });
 
-  Calculation.fromJson(Map<String, dynamic> json) {
-    multiplier = json['multiplier'];
-    multiplicand = json['multiplicand'];
-    product = json['product'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['multiplier'] = multiplier;
-    data['multiplicand'] = multiplicand;
-    data['product'] = product;
-    return data;
-  }
+ 
 }
