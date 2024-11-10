@@ -1,6 +1,7 @@
 import 'package:denomination/data/model/calculation_item.dart';
 import 'package:denomination/utils/format_indian_number_system.dart';
 import 'package:denomination/view/history/provider/history_provider.dart';
+import 'package:denomination/view/home/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:indian_currency_to_word/indian_currency_to_word.dart';
@@ -49,6 +50,11 @@ class _HistoryViewState extends State<HistoryView> {
                       SlidableAction(
                         onPressed: (value) {
                           //Implement Edit Feature
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => HomeView(calculationItem: provider.calculationItems[index], index: index,)),
+                              (route) => false);
                         },
                         backgroundColor: const Color(0xFF21B7CA),
                         foregroundColor: Colors.white,

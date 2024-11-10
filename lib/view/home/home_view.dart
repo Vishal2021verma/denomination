@@ -9,7 +9,9 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:indian_currency_to_word/indian_currency_to_word.dart';
 
 class HomeView extends StatefulWidget {
-  const HomeView({super.key});
+  final CalculationItem? calculationItem;
+  final int index;
+  const HomeView({super.key, this.calculationItem, this.index = 0});
 
   @override
   State<HomeView> createState() => _HomeViewState();
@@ -19,6 +21,8 @@ class _HomeViewState extends State<HomeView> {
   final Map<int, TextEditingController> controllers = {};
   final List<int> denominations = [2000, 500, 200, 100, 50, 20, 10, 5, 2, 1];
   double totalAmount = 0;
+  bool isEdit = false;
+
   final converter = AmountToWords();
 
   @override
@@ -27,8 +31,21 @@ class _HomeViewState extends State<HomeView> {
     for (int denomination in denominations) {
       controllers[denomination] = TextEditingController();
     }
+
+    //For Edditing the field
+    if (widget.calculationItem != null) {
+      isEdit = true;
+      totalAmount = double.parse(widget.calculationItem!.totalAmount ?? "0");
+      for (var calculation in widget.calculationItem!.calculation!) {
+        controllers[int.parse(calculation.multiplier ?? '1')]!.text =
+            calculation.multiplicand == "0"
+                ? ""
+                : calculation.multiplicand ?? "";
+      }
+    }
   }
 
+  //Calculate the total amount
   void calculateTotal() {
     double sum = 0;
     for (int denomination in denominations) {
@@ -40,24 +57,37 @@ class _HomeViewState extends State<HomeView> {
     });
   }
 
+  //Clear all the text field values
   void clearAll() {
     for (int denomination in denominations) {
       controllers[denomination]!.clear();
-      totalAmount = 0;
-      setState(() {});
     }
+    totalAmount = 0;
+    isEdit = false;
+    setState(() {});
   }
 
   CalculationItem makeModel() {
     List<Calculation> calulations = [];
-    for(int denomination in denominations){
-        double count = double.tryParse(controllers[denomination]!.text) ?? 0;
-        calulations.add(Calculation(multiplier: denomination.toString(), multiplicand: count.toString(), product: "${denomination * count}"));
+    for (int denomination in denominations) {
+      double count = double.tryParse(controllers[denomination]!.text) ?? 0;
+      calulations.add(Calculation(
+          multiplier: denomination.toString(),
+          multiplicand: count.toInt().toString(),
+          product: "${denomination * count}"));
     }
-    return CalculationItem(totalAmount: totalAmount.toString(),
-    date: DateTime.now().toString(),
-    calculation: calulations
-    );
+    return CalculationItem(
+        totalAmount: totalAmount.toString(),
+        date: DateTime.now().toString(),
+        calculation: calulations);
+  }
+
+  @override
+  void dispose() {
+    for (int denomination in denominations) {
+      controllers[denomination]!.dispose();
+    }
+    super.dispose();
   }
 
   @override
@@ -186,6 +216,9 @@ class _HomeViewState extends State<HomeView> {
                     showDialog(
                         context: context,
                         builder: (context) => SavePopWridget(
+                              action: clearAll,
+                              isEdit: isEdit,
+                              index: widget.index,
                               calculationItem: makeModel(),
                             ));
                   },
@@ -289,3 +322,5 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 }
+
+// SystemChannels.textInput.invokeMethod('TextInput.hide');

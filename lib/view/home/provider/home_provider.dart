@@ -17,4 +17,12 @@ class HomeProvider extends ChangeNotifier {
       log(e.toString());
     }
   }
+   //Update Item
+  Future<void> updateAtItem(CalculationItem calculationItem, int index) async {
+    try {
+      await _calculationItemRepository.updateItem(calculationItem, index);
+    } catch (e) {
+      log(e.toString());
+    }
+  }
 }

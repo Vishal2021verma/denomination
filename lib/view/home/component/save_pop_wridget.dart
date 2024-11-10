@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class SavePopWridget extends StatefulWidget {
+  final action;
   final CalculationItem calculationItem;
   final int index;
   final bool isEdit;
@@ -11,7 +12,8 @@ class SavePopWridget extends StatefulWidget {
       {super.key,
       required this.calculationItem,
       this.index = 0,
-      this.isEdit = false});
+      this.isEdit = false,
+      this.action});
 
   @override
   State<SavePopWridget> createState() => _SavePopWridgetState();
@@ -22,6 +24,7 @@ class _SavePopWridgetState extends State<SavePopWridget> {
   String selectedCategory = "General";
   TextEditingController remarkController = TextEditingController();
 
+//Add Item
   addItem() async {
     CalculationItem calculationItem = CalculationItem(
         totalAmount: widget.calculationItem.totalAmount,
@@ -33,11 +36,33 @@ class _SavePopWridgetState extends State<SavePopWridget> {
         .addItem(calculationItem);
   }
 
+  //Update Item
+  updateItem() async {
+    CalculationItem calculationItem = CalculationItem(
+        totalAmount: widget.calculationItem.totalAmount,
+        date: widget.calculationItem.date,
+        remark: remarkController.text.trim(),
+        calculation: widget.calculationItem.calculation,
+        type: selectedCategory);
+    await Provider.of<HomeProvider>(context, listen: false)
+        .updateAtItem(calculationItem, widget.index);
+  }
+
   @override
   void dispose() {
     remarkController.dispose();
 
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.isEdit) {
+      selectedCategory = widget.calculationItem.type ?? 'General';
+      remarkController.text = widget.calculationItem.remark ?? '';
+    }
   }
 
   @override
@@ -172,8 +197,8 @@ class _SavePopWridgetState extends State<SavePopWridget> {
                                     )),
                                 TextButton(
                                     onPressed: () {
-                                      //  widget.isEdit?
-                                      addItem();
+                                      widget.isEdit ? updateItem() : addItem();
+                                      widget.action();
                                       Navigator.pop(context);
                                       Navigator.pop(context);
                                     },
