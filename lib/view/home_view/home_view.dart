@@ -1,5 +1,8 @@
+import 'package:denomination/utils/format_indian_number_system.dart';
 import 'package:denomination/utils/image_resource.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:indian_currency_to_word/indian_currency_to_word.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -9,6 +12,30 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
+  final Map<int, TextEditingController> controllers = {};
+  final List<int> denominations = [2000, 500, 200, 100, 50, 20, 10, 5, 2, 1];
+  double totalAmount = 0;
+  final converter = AmountToWords();
+
+  @override
+  void initState() {
+    super.initState();
+    for (int denomination in denominations) {
+      controllers[denomination] = TextEditingController();
+    }
+  }
+
+  void calculateTotal() {
+    double sum = 0;
+    for (int denomination in denominations) {
+      double count = double.tryParse(controllers[denomination]!.text) ?? 0;
+      sum += denomination * count;
+    }
+    setState(() {
+      totalAmount = sum;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,11 +43,114 @@ class _HomeViewState extends State<HomeView> {
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[sliverAppBar()];
         },
-        body: const Text("Denomination"),
+        body: ListView.separated(
+          padding: const EdgeInsets.only(left: 14, right: 14, top: 18),
+          itemCount: denominations.length,
+          itemBuilder: (context, index) {
+            int denomination = denominations[index];
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 70,
+                  child: Text(
+                    '₹ $denomination',
+                    textScaler: TextScaler.noScaling,
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.w500),
+                  ),
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text("x",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w500)),
+                    const SizedBox(width: 14),
+                    SizedBox(
+                      width: 120,
+                      child: TextField(
+                        controller: controllers[denomination],
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                          LengthLimitingTextInputFormatter(10)
+                        ],
+                        decoration: InputDecoration(
+                            isDense: true,
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 6, horizontal: 6),
+                            hintStyle: TextStyle(
+                                color: Colors.grey.shade600,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400),
+                            hintText:
+                                denominations[index] == 2000 ? "Try 6" : "",
+                            suffixIcon:
+                                controllers[denomination]!.text.isNotEmpty
+                                    ? GestureDetector(
+                                        onTap: () {
+                                          controllers[denomination]!.clear();
+                                          calculateTotal();
+                                          setState(() {});
+                                        },
+                                        child: const Icon(
+                                          Icons.cancel,
+                                          size: 18,
+                                        ))
+                                    : const SizedBox.shrink(),
+                            border: const OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Colors.blue,
+                                    width: .5,
+                                    style: BorderStyle.solid)),
+                            enabledBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Colors.grey,
+                                    width: .5,
+                                    style: BorderStyle.solid)),
+                            focusedBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Colors.blue,
+                                    width: .5,
+                                    style: BorderStyle.solid)),
+                            filled: true,
+                            fillColor: const Color.fromARGB(255, 46, 52, 57)),
+                        onChanged: (value) => calculateTotal(),
+                      ),
+                    ),
+                    const SizedBox(width: 14),
+                    const Text(
+                      "=",
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                    ),
+                  ],
+                ),
+                FittedBox(
+                  child: Text(
+                    ' ₹ ${FormatIndianNumberSystem.formatIndianNumber(denomination * (int.tryParse(controllers[denomination]!.text) ?? 0))}',
+                    textAlign: TextAlign.start,
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.w500),
+                  ),
+                ),
+              ],
+            );
+          },
+          separatorBuilder: (BuildContext context, int index) {
+            return const SizedBox(
+              height: 14,
+            );
+          },
+        ),
       ),
+
+      
     );
   }
 
+  //Sliver appbar
   Widget sliverAppBar() {
     return SliverAppBar(
       expandedHeight: 160.0,
@@ -56,45 +186,47 @@ class _HomeViewState extends State<HomeView> {
             right: 18,
           ),
           centerTitle: false,
-          // title: const Column(
-          //   mainAxisAlignment: MainAxisAlignment.end,
-          //   crossAxisAlignment: CrossAxisAlignment.start,
-          //   children: [
-          //     SizedBox(
-          //       height: 25,
-          //     ),
-          //     Text("Total Amount",
-          //         style: TextStyle(
-          //           color: Colors.white,
-          //           fontWeight: FontWeight.w500,
-          //           fontSize: 14,
-          //         )),
-          //     SizedBox(
-          //       height: 3,
-          //     ),
-          //     Text("₹ 91,29,09,32,000",
-          //         style: TextStyle(
-          //           color: Colors.white,
-          //           fontWeight: FontWeight.w500,
-          //           fontSize: 16,
-          //         )),
-          //     SizedBox(
-          //       height: 2,
-          //     ),
-          //     Text(
-          //         "One Hundred Twenty Nine Core Nine Lakh Thirty Two Thousand Only/-",
-          //         style: TextStyle(
-          //           color: Colors.white,
-          //           fontWeight: FontWeight.w500,
-          //           fontSize: 12,
-          //         )),
-          //   ],
-          // ),
-          title: const Text("Denomination",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-              )),
+          title: totalAmount == 0
+              ? const Text("Denomination",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                  ))
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 25,
+                    ),
+                    const Text("Total Amount",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 14,
+                        )),
+                    const SizedBox(
+                      height: 3,
+                    ),
+                    Text(
+                        "₹ ${FormatIndianNumberSystem.formatIndianNumber(totalAmount.toInt())}",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                        )),
+                    const SizedBox(
+                      height: 2,
+                    ),
+                    Text(
+                        "${converter.convertAmountToWords(totalAmount, ignoreDecimal: true)} Only/-",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 12,
+                        )),
+                  ],
+                ),
           background: Image.asset(
             color: const Color.fromARGB(71, 0, 0, 0),
             colorBlendMode: BlendMode.multiply,
