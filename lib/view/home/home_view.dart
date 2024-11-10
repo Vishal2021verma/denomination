@@ -36,6 +36,7 @@ class _HomeViewState extends State<HomeView> {
     if (widget.calculationItem != null) {
       isEdit = true;
       totalAmount = double.parse(widget.calculationItem!.totalAmount ?? "0");
+
       for (var calculation in widget.calculationItem!.calculation!) {
         controllers[int.parse(calculation.multiplier ?? '1')]!.text =
             calculation.multiplicand == "0"
@@ -77,6 +78,8 @@ class _HomeViewState extends State<HomeView> {
           product: "${denomination * count}"));
     }
     return CalculationItem(
+        remark: isEdit ? widget.calculationItem!.remark ?? "" : "",
+        type: isEdit ? widget.calculationItem!.type ?? "" : "General",
         totalAmount: totalAmount.toString(),
         date: DateTime.now().toString(),
         calculation: calulations);

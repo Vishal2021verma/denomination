@@ -60,7 +60,7 @@ class _SavePopWridgetState extends State<SavePopWridget> {
     super.initState();
 
     if (widget.isEdit) {
-      selectedCategory = widget.calculationItem.type ?? 'General';
+      selectedCategory = widget.calculationItem.type ?? '';
       remarkController.text = widget.calculationItem.remark ?? '';
     }
   }
