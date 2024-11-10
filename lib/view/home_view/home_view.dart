@@ -1,5 +1,6 @@
 import 'package:denomination/utils/format_indian_number_system.dart';
 import 'package:denomination/utils/image_resource.dart';
+import 'package:denomination/view/history_view/history_view.dart';
 import 'package:denomination/view/home_view/component/save_pop_wridget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -171,7 +172,6 @@ class _HomeViewState extends State<HomeView> {
                   onTap: () {
                     showDialog(
                         context: context,
-                        
                         builder: (context) => const SavePopWridget());
                   },
                   label: "Save",
@@ -194,7 +194,14 @@ class _HomeViewState extends State<HomeView> {
               Icons.more_vert,
               color: Colors.white,
             ),
-            onSelected: (value) {},
+            onSelected: (value) {
+              if (value == "open_history") {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const HistoryView()));
+              }
+            },
             itemBuilder: (context) {
               return [
                 const PopupMenuItem(
