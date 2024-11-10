@@ -1,7 +1,17 @@
+import 'package:denomination/data/model/calculation_item.dart';
+import 'package:denomination/view/home/provider/home_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SavePopWridget extends StatefulWidget {
-  const SavePopWridget({super.key});
+  final CalculationItem calculationItem;
+  final int index;
+  final bool isEdit;
+  const SavePopWridget(
+      {super.key,
+      required this.calculationItem,
+      this.index = 0,
+      this.isEdit = false});
 
   @override
   State<SavePopWridget> createState() => _SavePopWridgetState();
@@ -10,6 +20,26 @@ class SavePopWridget extends StatefulWidget {
 class _SavePopWridgetState extends State<SavePopWridget> {
   List<String> categories = ["General", "Income", "Expanse"];
   String selectedCategory = "General";
+  TextEditingController remarkController = TextEditingController();
+
+  addItem() async {
+    CalculationItem calculationItem = CalculationItem(
+        totalAmount: widget.calculationItem.totalAmount,
+        date: widget.calculationItem.date,
+        remark: remarkController.text.trim(),
+        calculation: widget.calculationItem.calculation,
+        type: selectedCategory);
+    await Provider.of<HomeProvider>(context, listen: false)
+        .addItem(calculationItem);
+  }
+
+  @override
+  void dispose() {
+    remarkController.dispose();
+
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -76,11 +106,10 @@ class _SavePopWridgetState extends State<SavePopWridget> {
             TextField(
               minLines: 2,
               maxLines: 4,
+              controller: remarkController,
               textInputAction: TextInputAction.done,
               keyboardType: TextInputType.multiline,
               decoration: InputDecoration(
-                  // contentPadding:
-                  // const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                   hintStyle: TextStyle(
                       color: Colors.grey.shade600,
                       fontSize: 12,
@@ -142,7 +171,12 @@ class _SavePopWridgetState extends State<SavePopWridget> {
                                           color: Colors.white, fontSize: 18),
                                     )),
                                 TextButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      //  widget.isEdit?
+                                      addItem();
+                                      Navigator.pop(context);
+                                      Navigator.pop(context);
+                                    },
                                     child: const Text(
                                       "Yes",
                                       style: TextStyle(

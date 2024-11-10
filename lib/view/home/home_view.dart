@@ -1,3 +1,4 @@
+import 'package:denomination/data/model/calculation_item.dart';
 import 'package:denomination/utils/format_indian_number_system.dart';
 import 'package:denomination/utils/image_resource.dart';
 import 'package:denomination/view/history/history_view.dart';
@@ -45,6 +46,18 @@ class _HomeViewState extends State<HomeView> {
       totalAmount = 0;
       setState(() {});
     }
+  }
+
+  CalculationItem makeModel() {
+    List<Calculation> calulations = [];
+    for(int denomination in denominations){
+        double count = double.tryParse(controllers[denomination]!.text) ?? 0;
+        calulations.add(Calculation(multiplier: denomination.toString(), multiplicand: count.toString(), product: "${denomination * count}"));
+    }
+    return CalculationItem(totalAmount: totalAmount.toString(),
+    date: DateTime.now().toString(),
+    calculation: calulations
+    );
   }
 
   @override
@@ -172,7 +185,9 @@ class _HomeViewState extends State<HomeView> {
                   onTap: () {
                     showDialog(
                         context: context,
-                        builder: (context) => const SavePopWridget());
+                        builder: (context) => SavePopWridget(
+                              calculationItem: makeModel(),
+                            ));
                   },
                   label: "Save",
                   child: const Icon(Icons.save_alt_rounded)),
