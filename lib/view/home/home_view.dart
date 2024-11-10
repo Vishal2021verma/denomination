@@ -187,14 +187,15 @@ class _HomeViewState extends State<HomeView> {
                   ),
                   Expanded(
                     child: SizedBox(
-                      height: 20,
+                      height: 32,
                       child: FittedBox(
                         alignment: Alignment.centerLeft,
                         child: Text(
                           ' ₹ ${FormatIndianNumberSystem.formatIndianNumber(denomination * (int.tryParse(controllers[denomination]!.text) ?? 0))}',
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.start,
-                          style: const TextStyle(fontWeight: FontWeight.w500),
+                          style: const TextStyle(
+                              fontWeight: FontWeight.w500, fontSize: 20),
                         ),
                       ),
                     ),
@@ -243,7 +244,7 @@ class _HomeViewState extends State<HomeView> {
   //Sliver appbar
   Widget sliverAppBar() {
     return SliverAppBar(
-      expandedHeight: 160.0,
+      expandedHeight: 150.0,
       toolbarHeight: 70,
       floating: false,
       pinned: true,
