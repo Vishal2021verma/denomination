@@ -108,7 +108,7 @@ class _HomeViewState extends State<HomeView> {
           visible: totalAmount != 0,
           child: SpeedDial(
             backgroundColor: const Color.fromRGBO(12, 84, 145, 1),
-            icon: Icons.flash_on_rounded,
+            icon: Icons.bolt_rounded,
             iconTheme: const IconThemeData(color: Colors.white),
             children: [
               SpeedDialChild(
