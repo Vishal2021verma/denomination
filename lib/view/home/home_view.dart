@@ -145,10 +145,11 @@ class _HomeViewState extends State<HomeView> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SizedBox(
-              width: 70,
+              width: 80,
               child: Text(
                 '₹ $denomination',
                 textScaler: TextScaler.noScaling,
+                maxLines: 1,
                 style:
                     const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
               ),
