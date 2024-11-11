@@ -98,118 +98,11 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: NestedScrollView(
-          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-            return <Widget>[sliverAppBar()];
-          },
-          body: ListView.separated(
-            padding: const EdgeInsets.only(left: 14, right: 14, top: 18),
-            itemCount: denominations.length,
-            itemBuilder: (context, index) {
-              int denomination = denominations[index];
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: 70,
-                    child: Text(
-                      '₹ $denomination',
-                      textScaler: TextScaler.noScaling,
-                      style: const TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.w500),
-                    ),
-                  ),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Text("x",
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.w500)),
-                      const SizedBox(width: 14),
-                      SizedBox(
-                        width: 120,
-                        child: TextField(
-                          controller: controllers[denomination],
-                          keyboardType: TextInputType.number,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly,
-                            LengthLimitingTextInputFormatter(8)
-                          ],
-                          decoration: InputDecoration(
-                              isDense: true,
-                              contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 6, horizontal: 6),
-                              hintStyle: TextStyle(
-                                  color: Colors.grey.shade600,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400),
-                              hintText:
-                                  denominations[index] == 2000 ? "Try 6" : "",
-                              suffixIcon:
-                                  controllers[denomination]!.text.isNotEmpty
-                                      ? GestureDetector(
-                                          onTap: () {
-                                            controllers[denomination]!.clear();
-                                            calculateTotal();
-                                            setState(() {});
-                                          },
-                                          child: const Icon(
-                                            Icons.cancel,
-                                            size: 18,
-                                          ))
-                                      : const SizedBox.shrink(),
-                              border: const OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colors.blue,
-                                      width: .5,
-                                      style: BorderStyle.solid)),
-                              enabledBorder: const OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colors.grey,
-                                      width: .5,
-                                      style: BorderStyle.solid)),
-                              focusedBorder: const OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colors.blue,
-                                      width: .5,
-                                      style: BorderStyle.solid)),
-                              filled: true,
-                              fillColor: const Color.fromARGB(255, 46, 52, 57)),
-                          onChanged: (value) => calculateTotal(),
-                        ),
-                      ),
-                      const SizedBox(width: 14),
-                      const Text(
-                        "=",
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w500),
-                      ),
-                    ],
-                  ),
-                  Expanded(
-                    child: SizedBox(
-                      height: 32,
-                      child: FittedBox(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          ' ₹ ${FormatIndianNumberSystem.formatIndianNumber(denomination * (int.tryParse(controllers[denomination]!.text) ?? 0))}',
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.start,
-                          style: const TextStyle(
-                              fontWeight: FontWeight.w500, fontSize: 20),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              );
+            headerSliverBuilder:
+                (BuildContext context, bool innerBoxIsScrolled) {
+              return [sliverAppBar()];
             },
-            separatorBuilder: (BuildContext context, int index) {
-              return const SizedBox(
-                height: 14,
-              );
-            },
-          ),
-        ),
+            body: body()),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: Visibility(
           visible: totalAmount != 0,
@@ -239,6 +132,115 @@ class _HomeViewState extends State<HomeView> {
             ],
           ),
         ));
+  }
+
+  //Body
+  Widget body() {
+    return ListView.separated(
+      padding: const EdgeInsets.only(left: 14, right: 14, top: 18),
+      itemCount: denominations.length,
+      itemBuilder: (context, index) {
+        int denomination = denominations[index];
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 70,
+              child: Text(
+                '₹ $denomination',
+                textScaler: TextScaler.noScaling,
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+              ),
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text("x",
+                    style:
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
+                const SizedBox(width: 14),
+                SizedBox(
+                  width: 120,
+                  child: TextField(
+                    controller: controllers[denomination],
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(8)
+                    ],
+                    decoration: InputDecoration(
+                        isDense: true,
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 6, horizontal: 6),
+                        hintStyle: TextStyle(
+                            color: Colors.grey.shade600,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400),
+                        hintText: denominations[index] == 2000 ? "Try 6" : "",
+                        suffixIcon: controllers[denomination]!.text.isNotEmpty
+                            ? GestureDetector(
+                                onTap: () {
+                                  controllers[denomination]!.clear();
+                                  calculateTotal();
+                                  setState(() {});
+                                },
+                                child: const Icon(
+                                  Icons.cancel,
+                                  size: 18,
+                                ))
+                            : const SizedBox.shrink(),
+                        border: const OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors.blue,
+                                width: .5,
+                                style: BorderStyle.solid)),
+                        enabledBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors.grey,
+                                width: .5,
+                                style: BorderStyle.solid)),
+                        focusedBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors.blue,
+                                width: .5,
+                                style: BorderStyle.solid)),
+                        filled: true,
+                        fillColor: const Color.fromARGB(255, 46, 52, 57)),
+                    onChanged: (value) => calculateTotal(),
+                  ),
+                ),
+                const SizedBox(width: 14),
+                const Text(
+                  "=",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                ),
+              ],
+            ),
+            Expanded(
+              child: SizedBox(
+                height: 32,
+                child: FittedBox(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    ' ₹ ${FormatIndianNumberSystem.formatIndianNumber(denomination * (int.tryParse(controllers[denomination]!.text) ?? 0))}',
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.start,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w500, fontSize: 20),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+      separatorBuilder: (BuildContext context, int index) {
+        return const SizedBox(
+          height: 14,
+        );
+      },
+    );
   }
 
   //Sliver appbar

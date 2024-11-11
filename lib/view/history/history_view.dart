@@ -52,7 +52,6 @@ $totalCount
 Grand Total Amount:
 ₹ ${FormatIndianNumberSystem.formatIndianNumber(double.parse(calculationItem.totalAmount ?? "0").toInt())}
 ${converter.convertAmountToWords(double.parse(calculationItem.totalAmount!), ignoreDecimal: true)} Only/-
-
 ''';
 
     log(text);
